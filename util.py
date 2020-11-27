@@ -9,11 +9,15 @@ if not os.path.exists(png_path):
     os.makedirs(png_path)
 
 
-def plot_regret(figure_name):
+def plot_regret(figure_name, policies, regret_dict):
     fig = plt.figure()
-    x = range(10)
-    y = np.cumsum(np.random.random(10))
-    plt.plot(x, y, color='k')
+    for policy in policies:
+        regrets = regret_dict[policy.name]
+        times = range(1, len(regrets) + 1)
+        plt.plot(times, regrets, color=policy.color)
+    # x = range(10)
+    # y = np.cumsum(np.random.random(10))
+    # plt.plot(x, y, color='k')
     save_figure(figure_name)
 
 

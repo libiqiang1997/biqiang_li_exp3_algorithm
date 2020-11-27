@@ -25,8 +25,13 @@ class Simulator(object):
             threads[i].start()
         for i in range(num_thread):
             threads[i].join()
+
         regret_dict = {}
-        regret_dict = thread_regret_dict
+        for policy in self.policies:
+            regret_dict[policy.name] = np.zeros(self.time_horizon)
+            for i in range(num_thread):
+                regret_dict[policy.name] += thread_regret_dict[i][policy.name]
+            regret_dict[policy.name] /= num_thread
         return regret_dict
 
     def run_each_thread(self, thread_id, thread_num_mc, thread_regret_dict):
@@ -38,6 +43,22 @@ class Simulator(object):
         for n_experiment in range(thread_num_mc):
             self.env.init()
             for policy in self.policies:
+                optimal_expected_rewards = np.zeros(self.time_horizon)
+                selected_expected_rewards = np.zeros(self.time_horizon)
                 policy.init(self.env.arms)
                 for t in range(1, self.time_horizon + 1):
+                    # choose arm
                     choice = policy.select_arm()
+                    # calculate regret
+                    optimal_expected_reward = self.env.get_optimal_expected_reward()
+                    optimal_expected_rewards[t-1] = optimal_expected_reward
+                    selected_expected_reward = self.env.get_selected_expected_reward(choice)
+                    selected_expected_rewards[t-1] = selected_expected_reward
+                    # update model
+                    round_reward = self.env.play(choice)
+                    policy.update(choice, round_reward)
+                expected_regrets = optimal_expected_rewards - selected_expected_rewards
+                cum_regret_dict[policy.name][n_experiment :] = np.cumsum(expected_regrets)
+        for policy in self.policies:
+            avg_regret_dict[policy.name] = np.mean(cum_regret_dict[policy.name], 0)
+        thread_regret_dict[thread_id] = avg_regret_dict

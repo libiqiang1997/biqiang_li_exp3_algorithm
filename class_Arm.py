@@ -1,3 +1,4 @@
+import numpy as np
 
 
 class Arm(object):
@@ -6,3 +7,7 @@ class Arm(object):
         self.expected_reward = expected_reward
 
         self.weight = 1
+
+    def pull(self, sigma_noise):
+        reward = np.random.normal(self.expected_reward, sigma_noise)
+        return reward
