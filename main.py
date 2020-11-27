@@ -20,7 +20,7 @@ else:
     num_mc = 10
     num_thread = 3
 
-k = 2
+k = 3
 
 
 def run_different_parameter():
