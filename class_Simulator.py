@@ -30,5 +30,4 @@ class Simulator(object):
     def run_each_thread(self, thread_id, thread_num_mc, thread_regret_dict):
         self.env.init()
         for policy in self.policies:
-            # print(policy)
-            pass
+            policy.init()

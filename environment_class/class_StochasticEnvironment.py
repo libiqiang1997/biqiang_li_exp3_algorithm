@@ -15,10 +15,10 @@ class StochasticEnvironment(object):
         for i in range(self.k):
             arm_id = i
             expected_reward = np.random.uniform(self.min_unif, self.max_unif)
-            print('expected_reward:', expected_reward)
+            # print('expected_reward:', expected_reward)
             expected_rewards[i] = expected_reward
             arm = Arm(arm_id, expected_reward)
             self.arms.append(arm)
-        for arm in self.arms:
-            print('id:', arm.arm_id)
-            print('expected_reward:', arm.expected_reward)
+        # for arm in self.arms:
+        #     print('id:', arm.arm_id)
+        #     print('expected_reward:', arm.expected_reward)

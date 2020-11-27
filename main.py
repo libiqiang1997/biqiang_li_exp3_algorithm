@@ -26,7 +26,7 @@ k = 2
 def run_different_parameter():
     figure_name = ('exp3_algorithm')
     bandit_env = StochasticEnvironment(k)
-    policies = [EXP3()]
+    policies = [EXP3(k)]
     simulator = Simulator(bandit_env, policies)
     regret_dict = simulator.run(num_thread, num_mc)
     plot_regret(figure_name)
