@@ -1,10 +1,12 @@
 import multiprocessing as mp
+import numpy as np
 
 
 class Simulator(object):
-    def __init__(self, env, policies):
+    def __init__(self, env, policies, time_horizon):
         self.env = env
         self.policies = policies
+        self.time_horizon = time_horizon
 
     def run(self, num_thread, num_mc):
         manager = mp.Manager()
@@ -28,6 +30,14 @@ class Simulator(object):
         return regret_dict
 
     def run_each_thread(self, thread_id, thread_num_mc, thread_regret_dict):
-        self.env.init()
+        cum_regret_dict = {}
+        avg_regret_dict = {}
         for policy in self.policies:
-            policy.init()
+            cum_regret_dict[policy.name] = np.zeros((thread_num_mc, self.time_horizon))
+            avg_regret_dict[policy.name] = np.zeros(self.time_horizon)
+        for n_experiment in range(thread_num_mc):
+            self.env.init()
+            for policy in self.policies:
+                policy.init(self.env.arms)
+                for t in range(1, self.time_horizon + 1):
+                    choice = policy.select_arm()

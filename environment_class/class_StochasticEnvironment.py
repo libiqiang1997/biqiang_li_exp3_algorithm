@@ -22,3 +22,4 @@ class StochasticEnvironment(object):
         # for arm in self.arms:
         #     print('id:', arm.arm_id)
         #     print('expected_reward:', arm.expected_reward)
+        #     print('weight:', arm.weight)

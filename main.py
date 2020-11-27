@@ -20,14 +20,14 @@ else:
     num_mc = 10
     num_thread = 3
 
-k = 3
+k = 2
 
 
 def run_different_parameter():
     figure_name = ('exp3_algorithm')
     bandit_env = StochasticEnvironment(k)
-    policies = [EXP3(k)]
-    simulator = Simulator(bandit_env, policies)
+    policies = [EXP3('EXP3', k)]
+    simulator = Simulator(bandit_env, policies, time_horizon)
     regret_dict = simulator.run(num_thread, num_mc)
     plot_regret(figure_name)
 
